@@ -49,6 +49,9 @@ export class ViewExpenses implements OnInit {
   inCategories: string[] = ['Salary', 'Investment', 'Other'];
   categories: string[] = this.exCategories;
 
+  //update record
+  updateCategoryOption: string[] = this.exCategories;
+
   //filter
   typeOption: string[] = ['Expense', 'Income'];
   categoryOption: string[] = ['Food', 'Travel', 'Utility', 'Family', 'Salary', 'Investment', 'Other'];
@@ -127,18 +130,86 @@ export class ViewExpenses implements OnInit {
       };
 
       this.pageNo = 1;
-      this.expenseService.addExpense(newExpense).subscribe(
-        addedRecord => {
-          Swal.fire('Success', 'Record added!')
-          this.ngOnInit();
-
-          form.reset();
+      this.expenseService.addExpense(newExpense).subscribe({
+        next: addedRecord => {
+          if(addedRecord) {
+            Swal.fire('Success', 'Record added!')
+            this.ngOnInit();
+  
+            form.reset();
+          }
+          else {
+            Swal.fire('Failed', 'Record added failed.')
+          }
         },
-        error => {
-          console.log('failed');
+        error: (err) => {
+          console.log('failed', err);
+          Swal.fire('Failed', 'Record added failed.')
+        },
+        complete: () => {
+          console.log('completed');
         }
-      );
+      });
     }
+  }
+
+  editingId: number | null = null;
+  editingExpense: Expense | null = null;
+
+  startEdit(expense: Expense) {
+    this.editingId = expense.id;
+    this.editingExpense = { ...expense };
+    this.updateCategoryOption = this.editingExpense.type === 'Income' ? this.inCategories : this.exCategories;
+  }
+
+  cancelEdit() {
+    this.editingId = null;
+    this.editingExpense = null;
+  }
+
+  onTypeChange(newType: string) {
+    this.updateCategoryOption = newType === 'Income'
+      ? this.inCategories
+      : this.exCategories;
+  
+    if (this.editingExpense && !this.updateCategoryOption.includes(this.editingExpense.category)) {
+      this.editingExpense.category = this.updateCategoryOption[0];
+    }
+  }
+  
+  updateRecord() {
+    if(!this.editingExpense) return;
+
+    const newExpense: Expense = {
+      id: this.editingExpense.id,
+      type: this.editingExpense.type,
+      amount: this.editingExpense.amount,
+      category: this.editingExpense.category,
+      expenseDate: this.editingExpense.expenseDate,
+      note: this.editingExpense.note
+    };
+
+    this.pageNo = 1;
+    this.expenseService.updateExpense(newExpense).subscribe({
+      next: updatedRecord => {
+        if(updatedRecord) {
+          Swal.fire('Success', 'Record updated!')
+          this.ngOnInit();
+          this.editingId = null;
+          this.editingExpense = null;
+        }
+        else {
+          Swal.fire('Failed', 'Record update failed.')
+        }
+      },
+      error: (err) => {
+        console.log('failed', err);
+        Swal.fire('Failed', 'Record update failed.')
+      },
+      complete: () => {
+        console.log('completed');
+      }
+    });
   }
 
   getMonthFilter() {
@@ -163,10 +234,23 @@ export class ViewExpenses implements OnInit {
     })
     if (!isConfirmed) return;
     this.pageNo = 1;
-    this.expenseService.deleteExpense(id).subscribe(() => {
-      console.log(`Record with ID ${id} deleted.`);
-      Swal.fire('Success', 'Delete successfully!')
-      this.ngOnInit();
+    this.expenseService.deleteExpense(id).subscribe({
+      next: (deleted) => {
+        if(deleted) {
+          Swal.fire('Success', 'Delete successfully!');
+          this.ngOnInit();
+        }
+        else {
+          Swal.fire('Failed', 'Record deleted failed.');
+        }
+      },
+      error: (err) => {
+        Swal.fire('Failed', 'Record deleted failed.');
+        console.log('failed', err);
+      },
+      complete: () => {
+        console.log('completed');
+      }
     });
   }
 

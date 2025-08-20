@@ -14,6 +14,10 @@ h1 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 1rem;
   border-radius: 0.5rem;
+
+  h1 {
+    white-space: wrap;
+  }
 }
 
 .add-expense {
@@ -222,7 +226,17 @@ select:focus {
     background-color: #f2f2f2;
   }
 
-  button:hover {
+  button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    margin: 0 2px;
+    color: #444;
+    transition: color 0.2s ease;
+  }
+
+  .delete-btn:hover {
     border-color: red;
   }
 
@@ -232,6 +246,18 @@ select:focus {
 
   .delete-btn:hover svg {
     stroke: rgb(139, 0, 0);
+  }
+
+  .file-btn:hover {
+    border-color: blue;
+  }
+
+  .file-btn svg {
+    stroke: blue;
+  }
+
+  .file-btn:hover svg {
+    stroke: rgb(0, 0, 119);
   }
 
   .pagination {

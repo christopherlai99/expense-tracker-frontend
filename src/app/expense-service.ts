@@ -3,16 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { Expense, ExpenseFilter } from './view-expenses/view-expenses';
 
-interface AddExpenseResponse {
-  expense: Expense;
-}
-
 type ExpensesResponse = {
   expenses: Expense[],
   totalRecord: number,
 }
 
-interface DeleteExpenseResponse {
+interface UpdateExpenseResponse {
   success: boolean;
   message: string;
 }
@@ -34,14 +30,20 @@ export class ExpenseService {
     );
   }
 
-  addExpense(expense: Expense): Observable<Expense> {
-    return this.http.post<AddExpenseResponse>(`${this.apiUrl}/add-expense`, expense).pipe(
-      map(res => res.expense)
+  addExpense(expense: Expense): Observable<boolean> {
+    return this.http.post<UpdateExpenseResponse>(`${this.apiUrl}/add-expense`, expense).pipe(
+      map(res => res.success)
+    );
+  }
+
+  updateExpense(expense: Expense): Observable<boolean> {
+    return this.http.post<UpdateExpenseResponse>(`${this.apiUrl}/update-expense`, expense).pipe(
+      map(res => res.success)
     );
   }
 
   deleteExpense(id: number): Observable<boolean> {
-    return this.http.post<DeleteExpenseResponse>(`${this.apiUrl}/delete-expense/${id}`, {}).pipe(
+    return this.http.post<UpdateExpenseResponse>(`${this.apiUrl}/delete-expense/${id}`, {}).pipe(
       map(res => res.success)
     );
   }

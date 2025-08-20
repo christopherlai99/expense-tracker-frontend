@@ -81,19 +81,73 @@
         </thead>
         <tbody>
           <tr *ngFor="let expense of expenses">
-            <td>{{ expense.expenseDate | date:'dd-MM-yyyy' }}</td>
-            <td>{{ expense.type }}</td>
-            <td>{{ expense.category }}</td>
-            <td>{{ expense.note }}</td>
-            <td>RM {{ expense.amount | number:'1.2-2' }}</td>
             <td>
-              <button (click)="deleteRecord(expense.id)" class="delete-btn">
+              <ng-container *ngIf="editingId === expense.id && editingExpense; else viewDate">
+                <input type="date" [(ngModel)]="editingExpense.expenseDate">
+              </ng-container>
+              <ng-template #viewDate>
+                {{ expense.expenseDate | date:'dd-MM-yyyy' }}
+              </ng-template>
+            </td>
+            <td>
+              <ng-container *ngIf="editingId === expense.id && editingExpense; else viewType">
+                <select [(ngModel)]="editingExpense.type" (ngModelChange)="onTypeChange($event)">
+                  <option *ngFor="let t of typeOption" [value]="t">{{ t }}</option>
+                </select>
+              </ng-container>
+              <ng-template #viewType>{{ expense.type }}</ng-template>
+            </td>
+            <td>
+              <ng-container *ngIf="editingId === expense.id && editingExpense; else viewCategory">
+                <select [(ngModel)]="editingExpense.category">
+                  <option *ngFor="let c of updateCategoryOption" [value]="c">{{ c }}</option>
+                </select>
+              </ng-container>
+              <ng-template #viewCategory>{{ expense.category }}</ng-template>
+            </td>
+            <td>
+              <ng-container *ngIf="editingId === expense.id && editingExpense; else viewNote">
+                <input type="text" [(ngModel)]="editingExpense.note">
+              </ng-container>
+              <ng-template #viewNote>{{ expense.note }}</ng-template>
+            </td>
+            <td>
+              <ng-container *ngIf="editingId === expense.id && editingExpense; else viewAmount">
+                <input type="number" [(ngModel)]="editingExpense.amount">
+              </ng-container>
+              <ng-template #viewAmount>
+                RM {{ expense.amount | number:'1.2-2' }}
+              </ng-template>
+            </td>
+            <td style="display: flex; gap: 1rem;">
+              <button *ngIf="editingId !== expense.id" (click)="deleteRecord(expense.id)" class="delete-btn" title="Delete">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="3 6 5 6 21 6"></polyline>
                   <path d="M19 6l-2 14H7L5 6"></path>
                   <path d="M10 11v6"></path>
                   <path d="M14 11v6"></path>
+                </svg>
+              </button>
+              <button *ngIf="editingId === expense.id" (click)="cancelEdit()" class="delete-btn" title="Cancel">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <button *ngIf="editingId !== expense.id" (click)="startEdit(expense)" class="file-btn" title="Update">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" 
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </button>
+              <button *ngIf="editingId === expense.id" (click)="updateRecord()" class="file-btn" title="Save">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
               </button>
             </td>
