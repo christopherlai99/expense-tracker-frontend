@@ -1,0 +1,19 @@
+<div class="multi-select-container">
+  <div class="dropdown-header" (click)="toggleDropdown()">
+    <span *ngIf="selectedOptions.length === 0">Select...</span>
+    <span *ngIf="selectedOptions.length === options.length">
+      All
+    </span>
+    <span *ngIf="selectedOptions.length !== options.length">
+      {{ selectedOptions.join(', ') }}
+    </span>
+    <span class="dropdown-arrow">{{ isDropdownOpen ? '▲' : '▼' }}</span>
+  </div>
+
+  <div class="dropdown-list" [class.open]="isDropdownOpen">
+    <div *ngFor="let option of options" class="dropdown-option" [ngClass]="{'selected': isSelected(option)}"
+      (click)="toggleSelection(option)">
+      {{ option }}
+    </div>
+  </div>
+</div>

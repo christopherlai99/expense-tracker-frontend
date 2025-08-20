@@ -1,0 +1,290 @@
+.view-expenses {
+  padding: 1rem;
+  display: flex;
+  gap: 2rem;
+  white-space: nowrap;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+.card {
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.add-expense {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  max-width: 30%;
+  width: 20rem;
+  max-height: fit-content;
+  background-color: #ffffff;
+  padding: 1.5rem;
+}
+
+.add-expense form {
+  width: 100%;
+}
+
+.add-expense-tabs {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.add-expense-tabs button {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  border: 1px solid #f0f0f0;
+  width: 100%;
+}
+
+.add-expense-tabs button.active {
+  background-color: #212529;
+  border: 1px solid #212529;
+  color: #ffffff;
+}
+
+.add-expense-tabs button:hover {
+  background-color: #212529;
+  border: 1px solid #212529;
+  color: #ffffff;
+}
+
+.add-expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: start;
+  justify-content: start;
+  width: 100%;
+}
+
+.add-expense-form-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #212529;
+}
+
+input[type="number"],
+input[type="text"],
+input[type="date"],
+select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #212529;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+::placeholder {
+  color: #999;
+}
+
+.save-button {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #212529;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.save-button:hover {
+  background-color: #eeeeee;
+  color: #212529;
+}
+
+@media (max-width: 500px) {
+  .add-expense-form {
+    padding: 1rem;
+  }
+}
+
+.right-side {
+  flex-grow: 1;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.filter {
+  flex-grow: 1;
+}
+
+.filter-form {
+  display: flex;
+  gap: 1rem;
+}
+
+.filter-form .filter-option {
+  width: 15%;
+}
+
+.filter-form input {
+  max-width: 20%;
+  max-height: fit-content;
+}
+
+.filter-form .save-button {
+  max-width: fit-content;
+  margin: unset;
+}
+
+.expense-table {
+  flex-grow: 1;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  th,
+  td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #e9ecef;
+    }
+  }
+
+  .sort-icon {
+    position: absolute;
+    right: 10px;
+    font-size: 10px;
+    opacity: 0.3;
+    transition: opacity 0.2s;
+  }
+
+  th.asc .sort-icon {
+    transform: rotate(180deg);
+    opacity: 1;
+  }
+
+  th.desc .sort-icon {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+
+  th:not(.asc):not(.desc) .sort-icon {
+    opacity: 0;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  button:hover {
+    border-color: red;
+  }
+
+  .delete-btn svg {
+    stroke: red;
+  }
+
+  .delete-btn:hover svg {
+    stroke: rgb(139, 0, 0);
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+
+    .page-no {
+      max-width: fit-content;
+      display: flex;
+      gap: 1rem;
+
+      button {
+        max-height: fit-content;
+      }
+    }
+
+    .page-size {
+      max-width: fit-content;
+      display: flex;
+      gap: 1rem;
+
+      select {
+        max-height: fit-content;
+      }
+    }
+  }
+}
+
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+
+  .card {
+    flex: 1 1 45%;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+
+  .bar-chart-ratio {
+    aspect-ratio: 1;
+    position: relative;
+    max-height: 300px;
+  }
+
+  .pie-chart-ratio {
+    aspect-ratio: 1;
+    position: relative;
+    max-height: 300px;
+  }
+
+  .card canvas {
+    width: 80% !important;
+    height: 80% !important;
+  }
+}

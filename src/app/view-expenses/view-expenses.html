@@ -1,0 +1,137 @@
+<div class="view-expenses">
+  <!-- Add Record Form -->
+  <div class="add-expense card">
+    <h1>Add Expense</h1>
+    <div class="add-expense-tabs">
+      <button [ngClass]="{'active': activeTab === 'Expense'}" (click)="setActiveTab('Expense')">Expense</button>
+      <button [ngClass]="{'active': activeTab === 'Income'}" (click)="setActiveTab('Income')">Income</button>
+    </div>
+    <form (ngSubmit)="addRecord(formRef)" #formRef="ngForm" class="space-y-3">
+      <div class="form-group add-expense-form">
+        <div class="add-expense-form-field">
+          <label for="amount">Amount</label>
+          <input type="number" id="amount" name="amount" [(ngModel)]="formRef.value.amount" placeholder="0.00" />
+        </div>
+        <div class="add-expense-form-field">
+          <label for="category">Category</label>
+          <select id="category" name="category" [(ngModel)]="formRef.value.category">
+            <option value="" disabled selected>Select a category</option>
+            <option *ngFor="let category of categories" [value]="" category>{{ category }}</option>
+          </select>
+        </div>
+        <div class="add-expense-form-field">
+          <label for="date">Date</label>
+          <input type="date" id="date" name="date" [(ngModel)]="formRef.value.date" />
+        </div>
+        <div class="add-expense-form-field">
+          <label for="note">Note</label>
+          <input type="text" id="note" name="note" [(ngModel)]="formRef.value.note" placeholder="e.g. personal hobby" />
+        </div>
+        <button type="submit" class="save-button">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="right-side">
+    <!-- Filter -->
+    <div class="filter card">
+      <h1>Filter</h1>
+      <form (ngSubmit)="applyFilter(filterRef)" #filterRef="ngForm" class="space-y-3">
+        <div class="form-group filter-form">
+          <input type="text" id="note" name="note" [(ngModel)]="filterRef.value.note" placeholder="Note" />
+          <app-multi-select-dropdown class="filter-option" [options]="typeOption" [selectedOptions]="selectedTypes"
+            (selectionChange)="onTypeSelectionChange($event)"></app-multi-select-dropdown>
+          <app-multi-select-dropdown class="filter-option" [options]="categoryOption"
+            [selectedOptions]="selectedCategories"
+            (selectionChange)="onCategorySelectionChange($event)"></app-multi-select-dropdown>
+          <app-multi-select-dropdown class="filter-option" [options]="monthOption" [selectedOptions]="selectedMonths"
+            (selectionChange)="onMonthSelectionChange($event)"></app-multi-select-dropdown>
+          <button type="submit" class="save-button">Apply</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Table View -->
+    <div class="expense-table">
+      <table>
+        <thead>
+          <tr>
+            <th (click)="sortBy('expenseDate')" [ngClass]="getSortClass('expenseDate')">
+              Date
+              <span class="sort-icon">{{ getSortClass('expenseDate') === 'asc' ? '▲' : '▼' }}</span>
+            </th>
+            <th (click)="sortBy('type')" [ngClass]="getSortClass('type')">
+              Type
+              <span class="sort-icon">{{ getSortClass('type') === 'asc' ? '▲' : '▼' }}</span>
+            </th>
+            <th (click)="sortBy('category')" [ngClass]="getSortClass('category')">
+              Category
+              <span class="sort-icon">{{ getSortClass('category') === 'asc' ? '▲' : '▼' }}</span>
+            </th>
+            <th (click)="sortBy('note')" [ngClass]="getSortClass('note')">
+              Note
+              <span class="sort-icon">{{ getSortClass('note') === 'asc' ? '▲' : '▼' }}</span>
+            </th>
+            <th (click)="sortBy('amount')" [ngClass]="getSortClass('amount')">
+              Amount
+              <span class="sort-icon">{{ getSortClass('amount') === 'asc' ? '▲' : '▼' }}</span>
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let expense of expenses">
+            <td>{{ expense.expenseDate | date:'dd-MM-yyyy' }}</td>
+            <td>{{ expense.type }}</td>
+            <td>{{ expense.category }}</td>
+            <td>{{ expense.note }}</td>
+            <td>RM {{ expense.amount | number:'1.2-2' }}</td>
+            <td>
+              <button (click)="deleteRecord(expense.id)" class="delete-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6l-2 14H7L5 6"></path>
+                  <path d="M10 11v6"></path>
+                  <path d="M14 11v6"></path>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <div class="page-no">
+          <button (click)="prevPage()" [disabled]="pageNo === 1">Prev</button>
+          <span>{{ pageSize * (pageNo-1) + 1 }} - {{min(totalRecords, pageSize * pageNo)}} of {{ getTotalPages()
+            }}</span>
+          <button (click)="nextPage()" [disabled]="pageNo === getTotalPages()">Next</button>
+        </div>
+        <div class="page-size">
+          <p>Page Size</p>
+          <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+            <option [value]="5">5</option>
+            <option [value]="10">10</option>
+            <option [value]="20">20</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <div *ngIf="isBrowser" class="chart card bar-chart-ratio">
+        <h1>Monthly Income vs Expense</h1>
+        <canvas baseChart [datasets]="monthlyChartData" [labels]="monthlyChartLabels" [options]="chartOptions"
+          [legend]="true" chartType="bar" height="600">
+        </canvas>
+      </div>
+
+      <div *ngIf="isBrowser" class="chart card pie-chart-ratio">
+        <h1>Current Month Expense Category</h1>
+        <canvas baseChart [data]="{ labels: categoryChartLabels, datasets: categoryChartData }"
+          [options]="pieChartOptions" [type]="'pie'" height="600">
+        </canvas>
+      </div>
+    </div>
+  </div>
+</div>
