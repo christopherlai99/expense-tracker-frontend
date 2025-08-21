@@ -2,64 +2,36 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.6.
 
-## Quick Run
+## Setup instructions
 ```bash
 npm install
 ng serve
 ```
 
-## Development server
+## Design & architecture overview
+- **Frontend Framework**: Angular 17 (chosen for strong TypeScript support and structure).
+- **UI**: Angular Material + TailwindCSS for consistent design.
+- **State Management**: Local component state (simple enough for this project).
+- **Architecture**: 
+  - Service layer (`ExpenseService`) handles API interaction.
+  - Components (`MultiSelectDropdown`, `ViewExpenses`) focus on UI and data binding.
+  - Models (`Expense`, `ExpenseFilter`) define consistent data structures.
 
-To start a local development server, run:
+## Trade-offs made
+- **Angular vs Vue**: Angular was chosen for its strong TypeScript integration and opinionated structure. The trade-off is a steeper learning curve and slightly heavier setup compared to Vue’s lighter footprint.
+- **No global state (e.g., NgRx)**: For a small app, avoided extra complexity. The trade-off is less scalability if the app grows.
+- **UI Library**: Angular Material used for speed, but it increases bundle size.
+- **API Integration**: Mock/local API used during development instead of a hosted backend for speed.
 
-```bash
-ng serve
-```
+## Areas for improvement and next steps for refactoring
+- **Error Handling**: Centralize error handling in an interceptor instead of repeating in every `subscribe`.
+- **Code Reusability**: Extract repeated modal/dialog logic into shared components.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## features were skipped due to time
+- **Table Column Customization**: Currently columns are fixed. Would add a customizable column selector to improve user experience.
+- **Type of Charts**: More kind of charts which can help user analyse the income expense condition (e.g., monthly breakdown, category distribution)
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Use of AI-assisted Tools
+- **ChatGPT**: Speed up chart setup, and refine string/date sorting logic.
+- **Claude**: Debug multi-select-dropdown component.
+- **Manual Adjustments**: AI-generated code was reviewed, refactored, and adapted to meet the project’s requirements.
