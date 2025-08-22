@@ -17,7 +17,7 @@ interface UpdateExpenseResponse {
   providedIn: 'root'
 })
 export class ExpenseService {
-  private apiUrl = 'https://localhost:7256/api/expense-tracker';
+  private apiUrl = 'https://chris-expense-tracker-376869617387.asia-southeast1.run.app/api/expense-tracker';
 
   constructor(private http: HttpClient) { }
 
