@@ -30,7 +30,9 @@ export interface ExpenseFilter {
 }
 
 (Date.prototype as any).toYearMonth = function () {
-  return this.toLocaleString().split(', ')[0].split('/').reverse().slice(0, 2).join('-')
+  const year = this.getFullYear()
+  const month = String(this.getMonth() + 1).padStart(2, '0')
+  return `${year}-${month}`
 }
 
 @Component({
